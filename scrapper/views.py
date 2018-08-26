@@ -1,9 +1,5 @@
-from django.utils.http import urlquote
-
 import requests
 from bs4 import BeautifulSoup
-
-#from django.conf import settings
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -11,7 +7,7 @@ from rest_framework.decorators import api_view
 @api_view(['POST'])
 def scrap(request):
     try:
-        page = requests.get(urlquote(request.data['url']))
+        page = requests.get(request.data['url'])
 
         soup = BeautifulSoup(page.text, features="html.parser")
         data = []
