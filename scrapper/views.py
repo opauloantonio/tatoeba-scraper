@@ -14,16 +14,16 @@ def scrap(request):
 
         containers = soup.find_all("div", class_="sentence-and-translations")
 
-        for i, container in enumerate(containers):
+        for container in containers:
             translations = []
             translationsContainers = container.findAll(class_="translation")
 
-            for j, t in enumerate(translationsContainers):
+            for translation in translationsContainers:
                 translations.append({
-                    "text": t.find(class_="text").text.strip(),
-                    "language": t.find(class_="lang").find("img").get('alt'),
-                    "id": t.find("md-button").get("href")[20::],
-                    "direct": 'direct' in t.find_parent("div").get("class")
+                    "text": translation.find(class_="text").text.strip(),
+                    "language": translation.find(class_="lang").find("img").get('alt'),
+                    "id": translation.find("md-button").get("href")[20::],
+                    "direct": 'direct' in translation.find_parent("div").get("class")
                 })
                 
             data.append({
@@ -37,5 +37,4 @@ def scrap(request):
 
         return Response(data, status=page.status_code)
     except Exception as e:
-        print(e)
         return Response(status=500)
