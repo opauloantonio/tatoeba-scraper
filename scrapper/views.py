@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 
 
 @api_view(['POST'])
-def scrap(request):
+def search(request):
     try:
         page = requests.get(request.data['url'])
 
