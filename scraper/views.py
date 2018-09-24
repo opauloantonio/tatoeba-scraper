@@ -15,11 +15,14 @@ def search(request):
         
         results = re.findall('\d+', soup.find_all("h2")[1].text)
         
+        total_pages = soup.find('span', class_='numbers').find_all('span')[-1].find('a').text
+
         if len(results) == 0:
             return Response({'data': [], 'numberOfResults': 0}, page.status_code)
         
         response = {
             'numberOfResults': results[0] if len(results) == 1 else results[1],
+            'numberOfPages': total_pages
             'data': []
         }
 
