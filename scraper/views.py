@@ -51,3 +51,23 @@ def search(request):
     except Exception as e:
         return Response(status=500)
 
+
+@api_view(['POST'])
+def sentence_details(request):
+    try:
+        page = requests.get(request.data['url'])
+        soup = BeautifulSoup(page.text, fetaures='html.parser')
+
+        data = []
+
+        for x in soup.find_all(class_='sentence'):
+           data.append({
+               'text': x.find('div', class_='text').text,
+               'language': x.find('img').get('alt'),
+               'id': x.get('data-sentence-id'),
+               'direct': 'directTranslation' in x.get('class')
+            })
+        
+        return Response(data, page.status_code)
+    except Exception as e:
+        return Response(status=500)
