@@ -22,7 +22,7 @@ def search(request):
         
         response = {
             'numberOfResults': results[0] if len(results) == 1 else results[1],
-            'numberOfPages': total_pages
+            'numberOfPages': total_pages,
             'data': []
         }
 
