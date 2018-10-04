@@ -56,7 +56,7 @@ def search(request):
 def sentence_details(request):
     try:
         page = requests.get(request.data['url'])
-        soup = BeautifulSoup(page.text, fetaures='html.parser')
+        soup = BeautifulSoup(page.text, features='html.parser')
 
         data = []
 
