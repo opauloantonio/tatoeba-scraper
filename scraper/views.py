@@ -49,6 +49,7 @@ def search(request):
             
         return Response(response, page.status_code)
     except Exception as e:
+        print(e)
         return Response(status=500)
 
 
@@ -70,4 +71,5 @@ def sentence_details(request):
         
         return Response(data, page.status_code)
     except Exception as e:
+        print(e)
         return Response(status=500)
