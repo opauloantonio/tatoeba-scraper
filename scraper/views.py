@@ -49,7 +49,7 @@ def search(request):
             
         return Response(response, page.status_code)
     except Exception as e:
-        print(request.data['url']
+        print(request.data['url'])
         print(e)
         return Response(status=500)
 
