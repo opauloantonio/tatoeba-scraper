@@ -109,3 +109,5 @@ venv.bak/
 # Database
 *.sqlite3
 
+# VS Code
+.vscode/
