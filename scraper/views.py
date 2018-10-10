@@ -18,10 +18,15 @@ def search(request):
         if len(results) == 0:
             return Response({'data': [], 'numberOfResults': 0}, page.status_code)
         
-        total_pages = soup.find('span', class_='numbers').find_all('span')[-1].find('a').text
+        number_of_results = results[0] if len(results) == 1 else results[1]
+        
+        if int(number_of_results) > 10:
+            total_pages = soup.find('span', class_='numbers').find_all('span')[-1].find('a').text
+        else:
+            total_pages = 1
 
         response = {
-            'numberOfResults': results[0] if len(results) == 1 else results[1],
+            'numberOfResults': number_of_results,
             'numberOfPages': total_pages,
             'data': []
         }
