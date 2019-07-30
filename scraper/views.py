@@ -12,22 +12,16 @@ def search(request):
         page = requests.get(request.data['url'])
 
         soup = BeautifulSoup(page.text, features="html.parser")
-        
+
         results = re.findall('\d+', soup.find_all("h2")[1].text)
 
         if len(results) == 0:
             return Response({'data': [], 'numberOfResults': 0}, page.status_code)
         
         number_of_results = results[0] if len(results) == 1 else results[1]
-        
-        if int(number_of_results) > 10:
-            total_pages = soup.find('span', class_='numbers').find_all('span')[-1].find('a').text
-        else:
-            total_pages = 1
 
         response = {
             'numberOfResults': number_of_results,
-            'numberOfPages': total_pages,
             'data': []
         }
 
