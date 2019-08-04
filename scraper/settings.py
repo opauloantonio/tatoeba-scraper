@@ -28,6 +28,11 @@ DEBUG = bool(int(os.environ.get('debug')))
 ALLOWED_HOSTS = ['tatoeba-scraper.herokuapp.com', 'localhost']
 
 
+# CORS 
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -136,9 +141,3 @@ import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
 
 DATABASES['default'].update(db_from_env)
-
-
-# CORS 
-
-CORS_ORIGIN_ALLOW_ALL = True
-
