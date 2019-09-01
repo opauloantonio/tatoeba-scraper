@@ -35,14 +35,14 @@ def search(request):
                 translations.append({
                     "text": translation.find(class_="text").text.strip(),
                     "language": translation.find(class_="lang").find("img").get('alt'),
-                    "id": translation.find("md-button").get("href")[20::],
+                    "id": translation.find_all(class_="md-icon-button")[-1].get("href")[20::],
                     "direct": 'direct' in translation.find_parent("div").get("class")
                 })
                 
             response['data'].append({
                 "text": container.find(class_="text").text.strip(),
                 "language": container.find(class_="lang").find("img").get('alt'),
-                "id": container.find("md-button").get("href")[20::],
+                "id": container.find_all(class_="md-icon-button")[-1].get("href")[20::],
                 "translations": translations
             })
             
