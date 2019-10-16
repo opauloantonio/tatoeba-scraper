@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('search/', views.search, name='search'),
     path('sentence_details/', views.sentence_details, name='sentence_details'),
+    path('languages/', views.languages, name="languages"),
 ]
