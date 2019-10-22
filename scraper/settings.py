@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('debug')))
 
-ALLOWED_HOSTS = ['tatoeba-scraper.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['tatoeba-scraper.herokuapp.com', 'localhost', "192.168.18.4"]
 
 
 # CORS 
