@@ -34,13 +34,13 @@ def search(request):
 
     response = {
         'numberOfResults': results,
-        'data': []
+        'sentences': []
     }
 
     containers = soup.find_all("div", class_="sentence-and-translations")
 
     for c in containers:
-        response['data'].append(get_sentence(eval(c.get("ng-init")[12:-1])))
+        response['sentences'].append(get_sentence(eval(c.get("ng-init")[12:-1])))
         
     return Response(response, page.status_code)
 
