@@ -19,8 +19,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('search/', views.search, name='search'),
-    path('sentence_details/', views.sentence_details, name='sentence_details'),
-    path('languages/', views.languages, name="languages"),
+    path('search/', views.search),
+    path('sentence_details/', views.sentence_details),
+    path('languages/', views.languages),
+    path('random/', views.get_random_sentence),
 ]

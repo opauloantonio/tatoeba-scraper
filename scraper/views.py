@@ -89,3 +89,39 @@ def languages(request):
             pass
 
     return Response(languages_list, status=200)
+
+
+@api_view(['GET'])
+def get_random_sentence(request):
+    language = request.GET.get("lang", "und")
+
+    page = requests.get(
+        "https://www.tatoeba.org/eng/sentences/random/" + language
+    )
+
+    soup = BeautifulSoup(page.text, features='html.parser')
+
+    main_sentence = soup.find("div", class_="mainSentence")
+
+    extract_sentence = lambda container : {
+        "id": container.get("data-sentence-id"),
+        "lang": container.find("div", class_="lang").find("img").get("alt"),
+        "text": container.find("div", class_="text").text,
+    }
+
+    sentence = dict({
+        'translations': [],
+        **extract_sentence(main_sentence)
+    })
+
+    for t in soup.find_all("div", class_="directTranslation"):
+        sentence['translations'].append(
+            dict({"direct": True}, **extract_sentence(t))
+        )
+
+    for t in soup.find_all("div", class_="indirectTranslation"):
+        sentence['translations'].append(
+            dict({"direct": False}, **extract_sentence(t))
+        )
+
+    return Response(sentence, status=200)
