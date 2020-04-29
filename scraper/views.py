@@ -1,9 +1,10 @@
-import logging
+import json
 import requests
 from bs4 import BeautifulSoup
 
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
+
+from django.http import HttpResponse
 
 
 null = None
@@ -42,7 +43,10 @@ def search(request):
     for c in containers:
         response['sentences'].append(get_sentence(eval(c.get("ng-init")[12:-1])))
         
-    return Response(response, page.status_code)
+    return HttpResponse(
+        json.dumps(response),
+        content_type='application/json',
+    )
 
 
 @api_view(['POST'])
@@ -53,11 +57,15 @@ def sentence_details(request):
         soup = BeautifulSoup(page.text, features='html.parser')
 
         container = soup.find("div", class_="sentence-and-translations")
-        
-        return Response(get_sentence(eval(container.get("ng-init")[12:-1])), page.status_code)
+
+        return HttpResponse(
+            json.dumps(get_sentence(eval(container.get("ng-init")[12:-1]))),
+            content_type='application/json',
+        )
+
     except Exception as e:
         print(e)
-        return Response(status=500)
+        return HttpResponse(status=500)
 
 
 @api_view(['GET'])
@@ -88,7 +96,10 @@ def languages(request):
         except:
             pass
 
-    return Response(languages_list, status=200)
+    return HttpResponse(
+        json.dumps(languages_list),
+        content_type='application/json',
+    )
 
 
 @api_view(['GET'])
@@ -124,4 +135,7 @@ def get_random_sentence(request):
             dict({"direct": False}, **extract_sentence(t))
         )
 
-    return Response(sentence, status=200)
+    return HttpResponse(
+        json.dumps(sentence),
+        content_type='application/json',
+    )
