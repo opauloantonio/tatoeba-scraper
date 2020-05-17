@@ -20,7 +20,7 @@ from . import views
 
 urlpatterns = [
     path('search/', views.search),
-    path('sentence_details/', views.sentence_details),
+    path('sentence/<str:sentence_id>/', views.sentence_details),
     path('languages/', views.languages),
     path('random/', views.get_random_sentence),
 ]
