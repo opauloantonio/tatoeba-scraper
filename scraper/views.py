@@ -6,29 +6,26 @@ from rest_framework.decorators import api_view
 
 from django.http import HttpResponse
 
+from .utils import get_sentence_from_source, build_search_url_from_request_data
+
 
 null = None
 false = False
 true = True
 
 
-def get_sentence(source):
-    # The next two lines are absolutely the most horrible lines I've written in five years!
-
-    direct = [{**t, "direct": True} for t in [{k: sentence[k] for k in ('text', 'id', 'lang')} for sentence in source[1]]]
-    indirect = [{**t, "direct": False} for t in [{k: sentence[k] for k in ('text', 'id', 'lang')} for sentence in source[2]]]
-    
-    return {
-        "translations": direct + indirect,
-        "text": source[0]['text'],
-        "lang": source[0]['lang'],
-        "id": source[0]['id'],
-    }
-
-
 @api_view(['POST'])
 def search(request):
-    page = requests.get(request.data['url'])
+    url = request.data.get("url") or build_search_url_from_request_data(request.data)
+
+    if url is not None:
+        page = requests.get(url)
+    else:
+        return HttpResponse(
+            "You must either provide a full URL for a search page on Tatoeba or at least a text", 
+            status=400,
+            content_type='application/json',
+        )
 
     soup = BeautifulSoup(page.text, features="html.parser")
     results = soup.find_all("h2")[0].text
@@ -41,7 +38,7 @@ def search(request):
     containers = soup.find_all("div", class_="sentence-and-translations")
 
     for c in containers:
-        response['sentences'].append(get_sentence(eval(c.get("ng-init")[12:-1])))
+        response['sentences'].append(get_sentence_from_source(eval(c.get("ng-init")[12:-1])))
         
     return HttpResponse(
         json.dumps(response),
@@ -49,17 +46,19 @@ def search(request):
     )
 
 
-@api_view(['POST'])
-def sentence_details(request):
+@api_view(['GET'])
+def sentence_details(request, sentence_id):
     try:
-        page = requests.get(request.data['url'])
+        page = requests.get(
+            "https://www.tatoeba.org/eng/sentences/show/" + sentence_id
+        )
 
         soup = BeautifulSoup(page.text, features='html.parser')
 
         container = soup.find("div", class_="sentence-and-translations")
 
         return HttpResponse(
-            json.dumps(get_sentence(eval(container.get("ng-init")[12:-1]))),
+            json.dumps(get_sentence_from_source(eval(container.get("ng-init")[12:-1]))),
             content_type='application/json',
         )
 
@@ -70,10 +69,7 @@ def sentence_details(request):
 
 @api_view(['GET'])
 def languages(request):
-    user_language = request.GET.get("user_language")
-    
-    if user_language == None:
-        user_language = "eng"
+    user_language = request.GET.get("user_language", "eng")
 
     url = f"https://tatoeba.org/{user_language}/stats/sentences_by_language"
 
