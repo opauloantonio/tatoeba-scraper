@@ -1,3 +1,5 @@
+import urllib
+
 def get_sentence_from_source(source):
     # The next two lines are absolutely the most horrible lines I've written in five years!
 
@@ -30,8 +32,8 @@ def build_search_url_from_request_data(request_data):
         "tags": request_data.get("tags", ""),
         "list": request_data.get("list", ""),
         "native": request_data.get("native", ""),
-        "trans_filter": request_data.get("limit", ""),
-        "trans_to": request_data.get("trans_to", "und"),
+        "trans_filter": request_data.get("trans_filter", "limit"),
+        "trans_to": request_data.get("trans_to") or request_data.get("to", "und"),
         "trans_link": request_data.get("trans_link", ""),
         "trans_user": request_data.get("trans_user", ""),
         "trans_orphan": request_data.get("trans_orphan", ""),
@@ -41,9 +43,9 @@ def build_search_url_from_request_data(request_data):
         "sort_reverse": request_data.get("sort_reverse", ""),
     }
 
-    fragments = ["&{}={}".format(k, params[k]) for k in params]
+    fragments = ["&{}={}".format(k, urllib.parse.quote(params[k])) for k in params]
 
-    url = "https://www.tatoeba.org/eng/sentences/search?query=" + searchText
+    url = "https://www.tatoeba.org/eng/sentences/search?query=" + urllib.parse.quote(searchText)
 
     for f in fragments:
         url += f
