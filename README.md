@@ -58,7 +58,7 @@ If successful, it'll return an object with the fields **numberOfResults** which 
 
 For this endpoint, you should provide an id for a sentence on Tatoeba, for instance: /sentence/277046/
 
-If successful, it'll return an object with the fields **id**, **text** and **language** and an array with the translations of the sentence.
+If successful, it'll return an object with the sentence and a list of comments for the sentence.
 
 ### Languages
 
