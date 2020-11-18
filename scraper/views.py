@@ -53,12 +53,26 @@ def sentence_details(request, sentence_id):
             "https://www.tatoeba.org/eng/sentences/show/" + sentence_id
         )
 
-        soup = BeautifulSoup(page.text, features='html.parser')
+        soup = BeautifulSoup(page.text, features="html.parser")
 
         container = soup.find("div", class_="sentence-and-translations")
 
+        data = {
+            "sentence": get_sentence_from_source(eval(container.get("ng-init")[12:-1])),
+            "comments": [],
+        }
+
+        comment_cards = soup.find_all("md-card", class_="comment")
+
+        for cc in comment_cards:
+            data['comments'].append({
+                "author": cc.find("span", class_="md-title").text.replace("\n", ""),
+                "text": cc.find("p", class_="content").text.strip(),
+                "link": "https://www.tatoeba.org%s" % (cc.find("md-button", class_="md-icon-button").attrs['href']),
+            })
+
         return HttpResponse(
-            json.dumps(get_sentence_from_source(eval(container.get("ng-init")[12:-1]))),
+            json.dumps(data),
             content_type='application/json',
         )
 
