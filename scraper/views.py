@@ -114,7 +114,7 @@ def languages(request):
 
 @api_view(['GET'])
 def get_random_sentence(request):
-    language = request.GET.get("lang", "und")
+    language = request.GET.get("lang", "")
 
     page = requests.get(
         "https://www.tatoeba.org/eng/sentences/random/" + language
