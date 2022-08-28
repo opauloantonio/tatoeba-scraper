@@ -1,6 +1,8 @@
 # tatoeba-scraper
 A small project that scraps Tatoeba search results and returns them as JSON.
 
+**NOTE: When this project was first built, Tatoeba did not provide an API. There is one now and you should use it instead because it's a lot faster and offers way more filtering options, check it out [here](https://en.wiki.tatoeba.org/articles/show/api).** 
+
 
 ## How to use it
 
